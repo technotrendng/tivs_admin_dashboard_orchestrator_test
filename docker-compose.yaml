@@ -1,0 +1,23 @@
+services:
+  admin_dashboard_fe:
+    container_name: tivs_admin_dashboard_fe
+    build:
+      context: /home/administrator/Desktop/workspace/ivs/tivs_admin_dashboard_fe
+      dockerfile: Dockerfile
+    image: ghcr.io/technotrendng/tivs_admin_dashboard_fe:latest
+    build:
+      context: /home/administrator/Desktop/workspace/ivs/tivs_administrator_fe
+    restart: always
+    networks:
+      - admin
+    volumes:
+      - node_modules:/usr/src/app/node_modules
+    ports:
+      - "8082:8082"
+
+networks:
+  admin:
+    driver: bridge
+
+volumes:
+  node_modules: {}
