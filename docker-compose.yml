@@ -1,0 +1,41 @@
+---
+services:
+  admin_dashboard_be: 
+    container_name: tivs_admin_dashboard_be
+    build: 
+      context: /home/userdemo/Desktop/DevOps/tivs_admin_dashboard
+      dockerfile: Dockerfile
+    image: ghcr.io/technotrendng/tivs_admin_dashboard:latest
+    env_file: 
+      - ./backend.env
+    restart: always
+    networks:
+      - tivs_admin
+    volumes:
+      - node_modules:/usr/src/app/node_modules
+    ports:
+      - "8081:8081"
+
+  admin_dashboard_fe:
+    container_name: tivs_admin_dashboard_fe
+    build:
+      context: /home/userdemo/Desktop/DevOps/tivs_admin_dashboard_fe
+      dockerfile: Dockerfile
+    image: ghcr.io/technotrendng/tivs_admin_dashboard_fe:latest
+    env_file: 
+      - /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_fe/frontend.env
+    restart: always
+    networks:
+      - tivs_admin
+    volumes:
+      - node_modules:/usr/src/app/node_modules
+    ports:
+      - "8082:8082"
+
+
+networks:
+  tivs_admin: 
+    driver: bridge
+
+volumes:
+  node_modules: {}
