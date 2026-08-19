@@ -86,7 +86,7 @@ jobs:
         working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_orchestrator_test
         run: |
           docker compose pull
-          docker compose up -d --remove-orphansdocker images | grep tivs_admin
+          docker compose up -d --remove-orphans
 
       # Cleanup old images
       - name: Cleanup Docker images
