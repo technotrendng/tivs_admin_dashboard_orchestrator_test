@@ -1,0 +1,83 @@
+name: build and deploy tivs admin test app
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: false
+        default: 'main'
+
+permissions:
+  contents: write
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  OWNER: technotrendng
+  IMAGE_ADMIN_DASHBOARD_FE: tivs_admin_dashboard_fe
+  IMAGE_PARTNERS_DASHBOARD_BE: tivs_admin_dashboard_be
+  VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+  IMAGE_TAG: ${{ github.event.client_payload.tag || 'latest' }}
+
+jobs:
+  deploy_tivs_admin_test:
+    strategy:
+      matrix:
+        test-vm:
+          - { label: server_dash_75, name: "tivs_admin_dh_test" }
+    runs-on: [self-hosted, "${{ matrix.test-vm.label }}"]
+    environment: test
+    steps:
+      - name: Checkout orchestrator repo
+        uses: actions/checkout@v4
+
+      # Authenticate to GitHub Container Registry
+      - name: Authenticate to GHCR
+        run: |
+          echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GH_USERNAME }}" --password-stdin
+
+      # Clone tivs_admin_dashboard repo
+      - name: Clone admin dashboard repo
+        working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard
+        run: |
+          rm -rf tivs_admin_dashboard
+          git clone https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/technotrendng/tivs_admin_dashboard.git -b main tivs_admin_dashboard
+
+      # Build Docker image
+      - name: Build Docker image
+        working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard/tivs_admin_dashboard
+        run: >
+          docker build
+          --build-arg VITE_API_BASE_URL=${{ env.VITE_API_BASE_URL }}
+          -t ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD_FE }}:latest
+          .
+
+      # Tag image for GHCR
+      - name: Tag image for GHCR
+        run: |
+          docker tag ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD_FE }}:latest \
+            ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD_FE }}:${{ env.IMAGE_TAG }}
+
+      # Push image to GHCR
+      - name: Push image to GHCR
+        run: |
+          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD_FE }}:latest
+          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD_FE }}:${{ env.IMAGE_TAG }}
+
+      # Update compose file tag
+      - name: Update image tag in docker-compose.yml
+        working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_orchestrator_test
+        run: |
+          sed -i "s|ghcr.io/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD_FE }}:.*|ghcr.io/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD_FE }}:${{ env.IMAGE_TAG }}|" docker-compose.yml || true
+
+      # Deploy updated containers
+      - name: Pull & deploy updated containers
+        working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_orchestrator_test
+        run: |
+          docker compose pull
+          docker compose up -d --remove-orphans
+
+      # Cleanup old images
+      - name: Cleanup Docker images
+        run: |
+          docker image prune -af
