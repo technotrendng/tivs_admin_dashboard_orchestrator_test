@@ -51,7 +51,7 @@ jobs:
 
       # Build Docker image
       - name: Build Docker image
-        working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard/tivs_admin_dashboard
+        working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_orchestrator_test
         run: |
           docker compose build \
             --build-arg VITE_API_BASE_URL=${{ env.VITE_API_BASE_URL }} \
