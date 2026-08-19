@@ -53,10 +53,8 @@ jobs:
       - name: Build Docker image
         working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard/tivs_admin_dashboard
         run: |
-          docker build \
+          docker compose build \
             --build-arg VITE_API_BASE_URL=${{ env.VITE_API_BASE_URL }} \
-            -t ${{ env.REGISTRY }}/${{ env.OWNER }}/s{{ env.IMAGE_ADMIN_DASHBOARD_FE }}:latest \
-            .
 
       # Tag image for GHCR
       - name: Tag image for GHCR
