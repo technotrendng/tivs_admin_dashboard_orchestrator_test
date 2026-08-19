@@ -1,12 +1,8 @@
 ---
 name: build and deploy tivs admin test app
 on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Target environment'
-        required: false
-        default: 'main'
+  repository_dispatch:
+    types: [trigger_test_admin_dashboard_deploy]
 
 permissions:
   contents: write
