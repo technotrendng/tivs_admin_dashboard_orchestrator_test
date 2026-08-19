@@ -38,19 +38,21 @@ jobs:
         run: |
           echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GH_USERNAME }}" --password-stdin
 
+      # Clone tivs_admin_dashboard repo
       - name: Clone admin dashboard repo
         working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard
         run: |
           rm -rf tivs_admin_dashboard
-          git clone https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/technotrendng/tivs_admin_dashboard.git -b test
+          git clone https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/technotrendng/tivs_admin_dashboard.git -b main tivs_admin_dashboard
 
       # Build Docker image
       - name: Build Docker image
-        working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard/tivs_admin_dashboard
+        working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_orchestrator_test/
         run: |
           docker build \
             --build-arg VITE_API_BASE_URL=${{ env.VITE_API_BASE_URL }} \
             -t ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD }}:latest \
+            .
 
       # Tag image for GHCR
       - name: Tag image for GHCR
