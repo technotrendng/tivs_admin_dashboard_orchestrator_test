@@ -67,15 +67,18 @@ jobs:
       # Push image to GHCR
       - name: Push image to GHCR
         run: |
-          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD }}:${{ env.IMAGE_TAG }}
-          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD }}:${{ env.IMAGE_TAG }}
+          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD_BE }}:${{ env.IMAGE_TAG }}
+          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD_FE }}:${{ env.IMAGE_TAG }}
 
       # Update compose file tag
       - name: Update image tag in docker-compose.yml
         working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_orchestrator_test
         run: |
           sed -i \
-            "s|ghcr.io/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD }}:.*|ghcr.io/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD }}:${{ env.IMAGE_TAG }}|" \
+            "s|ghcr.io/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD_BE }}:.*|ghcr.io/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD_BE }}:${{ env.IMAGE_TAG }}|" \
+            docker-compose.yml || true
+          sed -i \
+            "s|ghcr.io/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD_FE }}:.*|ghcr.io/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD_FE }}:${{ env.IMAGE_TAG }}|" \
             docker-compose.yml || true
 
       # Deploy updated containers
@@ -83,7 +86,7 @@ jobs:
         working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_orchestrator_test
         run: |
           docker compose pull
-          docker compose up -d --remove-orphans
+          docker compose up -d --remove-orphansdocker images | grep tivs_admin
 
       # Cleanup old images
       - name: Cleanup Docker images
