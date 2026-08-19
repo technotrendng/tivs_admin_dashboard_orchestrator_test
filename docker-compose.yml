@@ -3,9 +3,9 @@ services:
   admin_dashboard_be: 
     container_name: tivs_admin_dashboard_be
     build: 
-      context: /home/userdemo/Desktop/DevOps/tivs_admin_dashboard
+      context: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard
       dockerfile: Dockerfile
-    image: ghcr.io/technotrendng/tivs_admin_dashboard:latest
+    #image: ghcr.io/technotrendng/tivs_admin_dashboard:latest
     env_file: 
       - ./backend.env
     restart: always
@@ -19,9 +19,9 @@ services:
   admin_dashboard_fe:
     container_name: tivs_admin_dashboard_fe
     build:
-      context: /home/userdemo/Desktop/DevOps/tivs_admin_dashboard_fe
+      context: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_fe
       dockerfile: Dockerfile
-    image: ghcr.io/technotrendng/tivs_admin_dashboard_fe:latest
+    #image: ghcr.io/technotrendng/tivs_admin_dashboard_fe:latest
     env_file: 
       - /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_fe/frontend.env
     restart: always
