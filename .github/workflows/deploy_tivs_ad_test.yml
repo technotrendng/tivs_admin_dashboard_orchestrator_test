@@ -37,11 +37,17 @@ jobs:
         run: |
           echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GH_USERNAME }}" --password-stdin
 
-      - name: Clone admin dashboard repo
+      - name: Clone admin dashboard repo backend
         working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard
         run: |
           rm -rf tivs_admin_dashboard
           git clone https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/technotrendng/tivs_admin_dashboard.git -b test
+
+      - name: Clone admin dashboard repo frontend
+        working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_fe
+        run: |
+          rm -rf tivs_admin_dashboard_fe
+          git clone https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/technotrendng/tivs_admin_dashboard_fe.git -b test
 
       # Build Docker image
       - name: Build Docker image
@@ -55,8 +61,10 @@ jobs:
       # Tag image for GHCR
       - name: Tag image for GHCR
         run: |
-          docker tag ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD }}:latest \
-            ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD }}:${{ env.IMAGE_TAG }}
+          docker tag ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD_BE }}:latest \
+            ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD_BE }}:${{ env.IMAGE_TAG }}
+          docker tag ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD_FE }}:latest \
+            ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD_FE }}:${{ env.IMAGE_TAG }}
 
       # Push image to GHCR
       - name: Push image to GHCR
