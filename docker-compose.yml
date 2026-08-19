@@ -5,7 +5,7 @@ services:
     build: 
       context: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard
       dockerfile: Dockerfile
-    image: ghcr.io/technotrendng/tivs_admin_dashboard_fe:latest
+    image: ghcr.io/technotrendng/tivs_admin_dashboard_be:latest
     env_file: 
       - ./backend.env
     restart: always
