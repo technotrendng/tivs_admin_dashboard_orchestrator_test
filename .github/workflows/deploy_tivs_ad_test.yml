@@ -33,4 +33,110 @@ jobs:
     runs-on: [self-hosted, "${{ matrix.test-vm.label }}" ]
     environment: test
 
+steps:
+      - name: Checkout orchestrator repo
+        uses: actions/checkout@v4
+
+      # Authenticate to GitHub Container Registry
+      - name: Authenticate to GHCR
+        run: |
+          docker login ghcr.io -u "${{ secrets.GH_USERNAME }}" --password-stdin <<< "${{ secrets.GH_TOKEN }}"
+
+      # Clone tivs_admin_dashboard repo
+      - name: Clone admin dashboard repo
+        working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard
+        run: |
+          rm -rf tivs_admin_dashboard
+          git clone https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/technotrendng/tivs_admin_dashboard.git -b test
+
+      # Build Docker image
+      - name: Build Docker image
+        working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_orchestrator_test
+        run: |
+          docker compose build
+
+      # Tag image for GHCR
+      - name: Tag image for GHCR
+        run: |
+          docker tag ghcr.io/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD }}:latest \
+             ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD }}:${{ env.IMAGE_TAG }}
+
+      # Push image to GHCR
+      - name: Push image to GHCR
+        run: |
+          docker push \
+            ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD }}:${{ env.IMAGE_TAG }}
+
+      # Update compose file tag
+      - name: Update image tag in docker-compose.yml
+        working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_orchestrator_test
+        run: |
+          sed -i \
+            "s|ghcr.io/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD }}:.*|ghcr.io/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD }}:${{ env.IMAGE_TAG }}|" \
+            docker-compose.yml || true
+
+      # Deploy updated containers
+      - name: Pull & deploy updated containers
+        working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_orchestrator_test
+        run: |
+          docker compose pull
+          docker compose up -d --remove-orphans
+
+      # Cleanup old images
+      - name: Cleanup Docker images
+        run: |
+          docker image prune -af
+steps:
+      - name: Checkout orchestrator repo
+        uses: actions/checkout@v4
+
+      # Authenticate to GitHub Container Registry
+      - name: Authenticate to GHCR
+        run: |
+          docker login ghcr.io -u "${{ secrets.GH_USERNAME }}" --password-stdin <<< "${{ secrets.GH_TOKEN }}"
+
+      # Clone tivs_admin_dashboard repo
+      - name: Clone admin dashboard repo
+        working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard
+        run: |
+          rm -rf tivs_admin_dashboard
+          git clone https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/technotrendng/tivs_admin_dashboard.git -b test
+
+      # Build Docker image
+      - name: Build Docker image
+        working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_orchestrator_test
+        run: |
+          docker compose build
+
+      # Tag image for GHCR
+      - name: Tag image for GHCR
+        run: |
+          docker tag ghcr.io/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD }}:latest \
+             ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD }}:${{ env.IMAGE_TAG }}
+
+      # Push image to GHCR
+      - name: Push image to GHCR
+        run: |
+          docker push \
+            ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD }}:${{ env.IMAGE_TAG }}
+
+      # Update compose file tag
+      - name: Update image tag in docker-compose.yml
+        working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_orchestrator_test
+        run: |
+          sed -i \
+            "s|ghcr.io/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD }}:.*|ghcr.io/${{ env.OWNER }}/${{ env.IMAGE_ADMIN_DASHBOARD }}:${{ env.IMAGE_TAG }}|" \
+            docker-compose.yml || true
+
+      # Deploy updated containers
+      - name: Pull & deploy updated containers
+        working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_orchestrator_test
+        run: |
+          docker compose pull
+          docker compose up -d --remove-orphans
+
+      # Cleanup old images
+      - name: Cleanup Docker images
+        run: |
+          docker image prune -af
     
