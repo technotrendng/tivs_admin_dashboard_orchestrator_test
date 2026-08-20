@@ -34,13 +34,13 @@ jobs:
           echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GH_USERNAME }}" --password-stdin
 
       - name: Clone admin dashboard repo backend
-        working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard
+        working-directory: /home/userdemo/Desktop/DevOps/tivs_admin_dashboard
         run: |
           rm -rf tivs_admin_dashboard
           git clone https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/technotrendng/tivs_admin_dashboard.git -b test
 
       - name: Clone admin dashboard repo frontend
-        working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_fe
+        working-directory: /home/userdemo/Desktop/DevOps/tivs_admin_dashboard_fe
         run: |
           rm -rf tivs_admin_dashboard_fe
           git clone https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/technotrendng/tivs_admin_dashboard_fe.git -b test
