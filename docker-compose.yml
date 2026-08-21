@@ -4,7 +4,7 @@ services:
     container_name: tivs_admin_dashboard_be
     build: 
       context: /home/userdemo/Desktop/DevOps/tivs_admin_dashboard
-      dockerfile: Dockerfile
+#      dockerfile: Dockerfile
     image: ghcr.io/technotrendng/tivs_admin_dashboard_be:latest
     env_file: 
       - ./backend.env
@@ -20,7 +20,7 @@ services:
     container_name: tivs_admin_dashboard_fe
     build:
       context: /home/userdemo/Desktop/DevOps/tivs_admin_dashboard_fe
-      dockerfile: Dockerfile
+ #     dockerfile: Dockerfile
     image: ghcr.io/technotrendng/tivs_admin_dashboard_fe:latest
     env_file: 
       - /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_fe/frontend.env
