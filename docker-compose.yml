@@ -3,7 +3,7 @@ services:
   admin_dashboard_be: 
     container_name: tivs_admin_dashboard_be
     build: 
-      context: /home/userdemo/Desktop/DevOps/tivs
+      context: /home/userdemo/Desktop/DevOps/tivs/tivs_admin_dashboard
     image: ghcr.io/technotrendng/tivs_admin_dashboard_be:latest
     env_file: 
       - path: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_orchestrator_test/backend.env
@@ -19,7 +19,7 @@ services:
   admin_dashboard_fe:
     container_name: tivs_admin_dashboard_fe
     build:
-      context: /home/userdemo/Desktop/DevOps/tivs
+      context: /home/userdemo/Desktop/DevOps/tivs/tivs_admin_dashboard_fe
       args: 
         VITE_API_BASE_URL: ${VITE_API_BASE_URL}  
     image: ghcr.io/technotrendng/tivs_admin_dashboard_fe:latest

@@ -53,7 +53,7 @@ jobs:
         working-directory: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_orchestrator_test
         run: |
           docker compose build \
-            --build-arg VITE_API_BASE_URL=${{ env.VITE_API_BASE_URL }} \
+            --build-arg VITE_API_BASE_URL=${{ env.VITE_API_BASE_URL }} 
 
       # Tag image for GHCR
       - name: Tag image for GHCR
