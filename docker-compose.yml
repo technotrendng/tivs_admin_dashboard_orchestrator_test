@@ -3,11 +3,11 @@ services:
   admin_dashboard_be: 
     container_name: tivs_admin_dashboard_be
     build: 
-      context: /home/userdemo/Desktop/DevOps/tivs_admin_dashboard
-#      dockerfile: Dockerfile
+      context: /home/userdemo/Desktop/DevOps/tivs
+      dockerfile: Dockerfile
     image: ghcr.io/technotrendng/tivs_admin_dashboard_be:latest
     env_file: 
-      - ./backend.env
+      - /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_orchestrator_test/backend.env
     restart: always
     networks:
       - tivs_admin
@@ -19,11 +19,11 @@ services:
   admin_dashboard_fe:
     container_name: tivs_admin_dashboard_fe
     build:
-      context: /home/userdemo/Desktop/DevOps/tivs_admin_dashboard_fe
- #     dockerfile: Dockerfile
+      context: /home/userdemo/Desktop/DevOps/tivs
+      dockerfile: Dockerfile
     image: ghcr.io/technotrendng/tivs_admin_dashboard_fe:latest
-    env_file: 
-      - /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_fe/frontend.env
+    #env_file: 
+    #  - /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_fe/frontend.env
     restart: always
     networks:
       - tivs_admin
