@@ -4,10 +4,10 @@ services:
     container_name: tivs_admin_dashboard_be
     build: 
       context: /home/userdemo/Desktop/DevOps/tivs
-      dockerfile: Dockerfile
     image: ghcr.io/technotrendng/tivs_admin_dashboard_be:latest
     env_file: 
-      - /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_orchestrator_test/backend.env
+      - path: /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_orchestrator_test/backend.env
+        required: true
     restart: always
     networks:
       - tivs_admin
@@ -20,7 +20,8 @@ services:
     container_name: tivs_admin_dashboard_fe
     build:
       context: /home/userdemo/Desktop/DevOps/tivs
-      dockerfile: Dockerfile
+      args: 
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL}  
     image: ghcr.io/technotrendng/tivs_admin_dashboard_fe:latest
     #env_file: 
     #  - /home/userdemo/Desktop/workspace/tivs/tivs_admin_dashboard_fe/frontend.env
