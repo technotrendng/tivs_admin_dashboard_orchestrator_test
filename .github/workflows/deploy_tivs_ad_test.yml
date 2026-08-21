@@ -1,8 +1,9 @@
 ---
 name: build and deploy tivs admin test app
 on:
-  repository_dispatch:
-    types: [trigger_test_admin_dashboard_deploy]
+  workflow_dispatch:
+  #repository_dispatch:
+  #  types: [trigger_test_admin_dashboard_deploy]
 
 permissions:
   contents: write
